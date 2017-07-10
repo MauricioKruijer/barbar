@@ -212,22 +212,15 @@ class StatusMenuController: NSObject, PreferencesWindowDelegate {
                 
                 let secondSymbolAtt =  NSAttributedString(string:secondSymbol, attributes: self.useColouredSymbols ? secondFont: self.font)
                 let secondPriceAtt = NSAttributedString(string:self.secondPrice, attributes: self.font)
-                // EEE HH:mm
-                //                let date = Date()
-                //                let dateFormatter = DateFormatter()
-                
-                //                dateFormatter.dateFormat = "EEE HH:mm"
-                //                let currentDateString: String = dateFormatter.string(from: date)
-                
-                //                let timeding = NSAttributedString(string: currentDateString, attributes: self.font)
-                
+
                 mutableAttributedString.append(firstSymbolAtt)
                 mutableAttributedString.append(firstPriceAtt)
                 mutableAttributedString.append(NSAttributedString(string:" "))
                 mutableAttributedString.append(secondSymbolAtt)
                 mutableAttributedString.append(secondPriceAtt)
-                //                mutableAttributedString.append(timeding)
+
                 self.statusItem.button?.frame = CGRect(0.0, 0.7, (self.statusItem.button?.frame.width)!, (self.statusItem.button?.frame.height)!);
+
                 self.statusItem.attributedTitle = mutableAttributedString
                 self.firstDetailView.update(firstPair, price: self.firstPrice, pairID: self.firstPairID)
                 self.secondDetailView.update(secondPair, price: self.secondPrice, pairID: self.secondPairID)
