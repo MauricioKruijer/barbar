@@ -39,7 +39,8 @@ class StatusMenuController: NSObject, PreferencesWindowDelegate {
     
     let statusItem = NSStatusBar.system().statusItem(withLength: NSVariableStatusItemLength)
     let defaults = Foundation.UserDefaults.standard
-    let font = [NSFontAttributeName: NSFont.systemFont(ofSize: 15)]
+    let font = [NSFontAttributeName: NSFont.systemFont(ofSize: 14),
+                NSForegroundColorAttributeName: NSColor.init(red: 75/255, green: 75/255, blue: 75/255, alpha: 1)]
     let pairsURL = "https://api.gdax.com/products"
     let green = NSColor.init(red: 22/256, green: 206/255, blue: 0/256, alpha: 1)
     let red = NSColor.init(red: 255/256, green: 73/255, blue: 0/256, alpha: 1)
@@ -62,12 +63,12 @@ class StatusMenuController: NSObject, PreferencesWindowDelegate {
             self.startNotifier()
         }
     }
-
+    
     //MARK: SETUP
     func setup() {
         
-        fontPosistive = [NSFontAttributeName: NSFont.systemFont(ofSize: 15), NSForegroundColorAttributeName: green]
-        fontNegative = [NSFontAttributeName: NSFont.systemFont(ofSize: 15), NSForegroundColorAttributeName: red]
+        fontPosistive = [NSFontAttributeName: NSFont.systemFont(ofSize: 14), NSForegroundColorAttributeName: green]
+        fontNegative = [NSFontAttributeName: NSFont.systemFont(ofSize: 14), NSForegroundColorAttributeName: red]
         
         if let interval = defaults.object(forKey: UserDefaults.interval.rawValue) as? TimeInterval {
             self.interval = interval
@@ -208,16 +209,25 @@ class StatusMenuController: NSObject, PreferencesWindowDelegate {
                 
                 let firstSymbolAtt =  NSAttributedString(string:firstSymbol, attributes: self.useColouredSymbols ? firstFont: self.font)
                 let firstPriceAtt = NSAttributedString(string:self.firstPrice, attributes: self.font)
-
+                
                 let secondSymbolAtt =  NSAttributedString(string:secondSymbol, attributes: self.useColouredSymbols ? secondFont: self.font)
                 let secondPriceAtt = NSAttributedString(string:self.secondPrice, attributes: self.font)
-
+                // EEE HH:mm
+                //                let date = Date()
+                //                let dateFormatter = DateFormatter()
+                
+                //                dateFormatter.dateFormat = "EEE HH:mm"
+                //                let currentDateString: String = dateFormatter.string(from: date)
+                
+                //                let timeding = NSAttributedString(string: currentDateString, attributes: self.font)
+                
                 mutableAttributedString.append(firstSymbolAtt)
                 mutableAttributedString.append(firstPriceAtt)
                 mutableAttributedString.append(NSAttributedString(string:" "))
                 mutableAttributedString.append(secondSymbolAtt)
                 mutableAttributedString.append(secondPriceAtt)
-                
+                //                mutableAttributedString.append(timeding)
+                self.statusItem.button?.frame = CGRect(0.0, 0.7, (self.statusItem.button?.frame.width)!, (self.statusItem.button?.frame.height)!);
                 self.statusItem.attributedTitle = mutableAttributedString
                 self.firstDetailView.update(firstPair, price: self.firstPrice, pairID: self.firstPairID)
                 self.secondDetailView.update(secondPair, price: self.secondPrice, pairID: self.secondPairID)
@@ -256,7 +266,7 @@ class StatusMenuController: NSObject, PreferencesWindowDelegate {
             callback(open, volume)
         }
     }
-
+    
     func fetchPairs() {
         let request = URLRequest(url: Foundation.URL(string: pairsURL)!)
         
@@ -314,7 +324,7 @@ class StatusMenuController: NSObject, PreferencesWindowDelegate {
         
         defaults.set(self.interval, forKey: UserDefaults.interval.rawValue)
         defaults.synchronize()
-    
+        
         updateTimer()
     }
     
@@ -384,5 +394,11 @@ class StatusMenuController: NSObject, PreferencesWindowDelegate {
     func stopNotifier() {
         reachability!.stopNotifier()
         reachability = nil
+    }
+}
+
+extension CGRect {
+    init(_ x:CGFloat, _ y:CGFloat, _ w:CGFloat, _ h:CGFloat) {
+        self.init(x:x, y:y, width:w, height:h)
     }
 }
